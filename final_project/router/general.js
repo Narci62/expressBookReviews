@@ -14,7 +14,7 @@ public_users.post("/register", (req, res) => {
     }
 
     // Vérifier si le nom d'utilisateur existe déjà
-    if (!isValid(username)) {
+    if (isValid(username)) {
         return res.status(400).json({ message: "Username exist" });
     }
     // Ajouter l'utilisateur dans notre "base de données"
