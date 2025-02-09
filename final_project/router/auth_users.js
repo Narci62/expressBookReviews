@@ -7,6 +7,14 @@ let users = [];
 
 const isValid = (username)=>{ //returns boolean
 //write code to check is the username is valid
+     const user = users.filter((user)=> user.username === username);
+     if(user.length > 0 )
+     {
+        return true;
+     }
+     else{
+        return false;
+     }
 }
 
 const authenticatedUser = (username,password)=>{ //returns boolean
@@ -38,7 +46,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
 
   let filtered_reviews = books[isbn].reviews;
-  let filter_users = Object.values(filtered_reviews).filter((review)=>review.user === req.user);
+  let filter_users = Object.values(filtered_reviews).filter((review)=>review.username === req.user.username);
   if(filter_users.length > 0){
     let filter_review = filter_users[0];
     
@@ -46,7 +54,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     if(review){
         filter_review.comment = review;
     }
-    filtered_reviews = Object.values(filtered_reviews).filter((review)=> review.user != req.user);
+    filtered_reviews = Object.values(filtered_reviews).filter((review)=> review.username != req.user.username);
 
     filtered_reviews.push(filter_review);
 
@@ -55,7 +63,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   else{
     filtered_reviews.push({
         'comment' : req.query.review,
-        'user' : req.user,
+        'username' : req.user.username,
     })
     res.status(200).json({message:`Review add`})
   }
@@ -66,7 +74,7 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
     //Write your code here
     const isbn = req.params.isbn;
   
-    books[isbn].reviews = Object.values(filtered_reviews).filter((review)=>review.user != req.user);
+    books[isbn].reviews = Object.values(filtered_reviews).filter((review)=>review.username != req.user.username);
     res.status(200).json({message:`Review for ${req.user} delete`})
   });
 
